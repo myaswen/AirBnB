@@ -10,14 +10,17 @@ module.exports = (sequelize, DataTypes) => {
       const { id, username, email } = this; // context will be the User instance
       return { id, username, email };
     }
+
     // Method to compare user's entered password to user's stored password:
     validatePassword(password) {
       return bcrypt.compareSync(password, this.hashedPassword.toString());
     }
+
     // Method to find user data by id:
     static getCurrentUserById(id) {
       return User.scope("currentUser").findByPk(id);
     }
+
     // Login method:
     static async login({ credential, password }) {
       const { Op } = require('sequelize');
@@ -33,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         return await User.scope('currentUser').findByPk(user.id);
       }
     }
+
     // Signup method:
     static async signup({ username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
@@ -43,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       return await User.scope('currentUser').findByPk(user.id);
     }
+
     static associate(models) {
       // define association here
     }
