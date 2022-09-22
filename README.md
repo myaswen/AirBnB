@@ -79,7 +79,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: GET
-  * URL: /users/login
+  * URL: /users
   * Headers:
     * Content-Type: application/json
   * Body:
