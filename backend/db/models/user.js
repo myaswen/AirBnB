@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     // Method to convert User instance to a 'safe' object:
     toSafeObject() {
-      const { id, username, email } = this; // context will be the User instance
-      return { id, username, email };
+      const { id, firstName, lastName, username, email } = this; // context will be the User instance
+      return { id, firstName, lastName, username, email };
     }
 
     // Method to compare user's entered password to user's stored password:
@@ -38,9 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // Signup method:
-    static async signup({ username, email, password }) {
+    static async signup({ firstName, lastName, username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
+        firstName,
+        lastName,
         username,
         email,
         hashedPassword
@@ -53,6 +55,32 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlpha: true,
+        len: [2, 30],
+        isCapitalized(value) {
+          if (value[0].toUpperCase() !== value[0]) {
+            throw new Error("Must be capitalized.");
+          }
+        }
+      }
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlpha: true,
+        len: [2, 30],
+        isCapitalized(value) {
+          if (value[0].toUpperCase() !== value[0]) {
+            throw new Error("Must be capitalized.");
+          }
+        }
+      }
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -85,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
     defaultScope: {
       attributes: {
-        exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
+        exclude: ["firstName", "lastName", "hashedPassword", "email", "createdAt", "updatedAt"]
       }
     },
     scopes: {
