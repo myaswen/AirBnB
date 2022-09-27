@@ -1,15 +1,20 @@
 'use strict';
 
-const { User } = require('../models');
+// const { User } = require('../models');
 
 module.exports = {
   async up(queryInterface, Sequelize) {
 
-    const foundUser = await User.findByPk(1);
+    // const foundUser = await User.findOne({
+    //   where: {
+    //     username: 'Demo'
+    //   }
+    // });
 
     return queryInterface.bulkInsert('Spots', [
       {
-        ownerId: foundUser.id,
+        // ownerId: foundUser.id,
+        ownerId: 1,
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
