@@ -6,36 +6,51 @@ const router = express.Router();
 
 // Get all spots:
 router.get('/', async (req, res) => {
-    const response = { Spots: [] };
 
-    const allSpots = await Spot.findAll();
+    const spots = await Spot.findAll({
+        include: [
+            { model: Review },
+            { model: SpotImage }
+        ]
+    });
 
-    for (let currentSpot of allSpots) {
-        let { id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = currentSpot;
-        const aggregateSpotData = { id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt };
+    // Convert the 'spots' promise to a POJO:
+    let spotsList = [];
+    spots.forEach(spot => {
+        spotsList.push(spot.toJSON());
+    });
 
-        const spotData = await Spot.findByPk(currentSpot.id, {
-            include: [
-                { model: Review },
-                { model: SpotImage }
-            ],
-            attributes: [
-                [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"]
-            ]
+    spotsList.forEach(spot => {
+        spot.SpotImages.forEach(image => {
+            if (image.preview === true) {
+                spot.previewImage = image.url;
+            }
+        });
+        if (!spot.previewImage) {
+            spot.previewImage = 'No preview image found'
+        }
+        delete spot.SpotImages;
+    });
+
+    spotsList.forEach(spot => {
+        let starsSum = 0;
+        let starsCount = 0;
+
+        spot.Reviews.forEach(review => {
+            starsSum += parseInt(review.stars);
+            starsCount++;
         });
 
-        aggregateSpotData.avgRating = spotData.dataValues.avgRating;
-
-        for (let image of spotData.dataValues.SpotImages) {
-            if (image.preview === true) {
-                aggregateSpotData.previewImage = image.url;
-            }
+        if (starsCount > 0) {
+            spot.avgRating = starsSum / starsCount;
+        } else {
+            spot.avgRating = "No rating"
         }
 
-        response.Spots.push(aggregateSpotData);
-    }
+        delete spot.Reviews;
+    });
 
-    return res.json(response);
+    res.json({Spots: spotsList});
 });
 
 module.exports = router;
