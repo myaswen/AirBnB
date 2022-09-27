@@ -8,13 +8,13 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     const response = { Spots: [] };
 
-    const spots = await Spot.findAll();
+    const allSpots = await Spot.findAll();
 
-    for (let spot of spots) {
-        let { id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot;
+    for (let currentSpot of allSpots) {
+        let { id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = currentSpot;
         const aggregateSpotData = { id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt };
 
-        const spotData = await Spot.findByPk(spot.id, {
+        const spotData = await Spot.findByPk(currentSpot.id, {
             include: [
                 { model: Review },
                 { model: SpotImage }
