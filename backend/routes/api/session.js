@@ -42,11 +42,18 @@ router.post('/', validateLogin, async (req, res, next) => {
         return next(err);
     }
 
-    await setTokenCookie(res, user);
+    const token = await setTokenCookie(res, user);
+    const { id, firstName, lastName, email, username } = user;
+    const response = {
+        id,
+        firstName,
+        lastName,
+        email,
+        username,
+        token
+    }
 
-    return res.json({
-        user
-    });
+    return res.json(response);
 });
 
 // Log out
