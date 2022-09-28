@@ -25,31 +25,36 @@ module.exports = {
       where: { name: "Linda's house" }
     });
 
+    const startDateOne = new Date("2021-11-19");
+    const endDateOne = new Date("2021-11-20");
+    const endDateTwo = new Date("2021-11-21");
+    const endDateThree = new Date("2021-11-22");
+
     return queryInterface.bulkInsert('Bookings', [
       {
         spotId: spotOne.id,
         userId: userTwo.id,
-        startDate: "2021-11-19",
-        endDate: "2021-11-20",
+        startDate: startDateOne,
+        endDate: endDateOne,
       },
       {
         spotId: spotTwo.id,
         userId: userThree.id,
-        startDate: "2021-11-19",
-        endDate: "2021-11-21",
+        startDate: startDateOne,
+        endDate: endDateTwo,
       },
       {
         spotId: spotThree.id,
         userId: userOne.id,
-        startDate: "2021-11-19",
-        endDate: "2021-11-22",
+        startDate: startDateOne,
+        endDate: endDateThree,
       }
     ]);
   },
 
   async down(queryInterface, Sequelize) {
     return queryInterface.bulkDelete('Bookings', {
-      startDate: "2021-11-19"
+      startDate: startDateOne
     }, {});
   }
 };
