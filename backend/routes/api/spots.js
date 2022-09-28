@@ -1,18 +1,11 @@
 const express = require('express');
 
 const { Spot, SpotImage, Review, sequelize } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
 
-// Get all spots:
-router.get('/', async (req, res) => {
-
-    const spots = await Spot.findAll({
-        include: [
-            { model: Review },
-            { model: SpotImage }
-        ]
-    });
+let aggregateSpotData = (spots) => {
 
     // Convert the 'spots' promise to a POJO:
     let spotsList = [];
@@ -50,7 +43,35 @@ router.get('/', async (req, res) => {
         delete spot.Reviews;
     });
 
-    res.json({Spots: spotsList});
+    return spotsList;
+};
+
+// Get all spots:
+router.get('/', async (req, res) => {
+
+    const spots = await Spot.findAll({
+        include: [
+            { model: Review },
+            { model: SpotImage }
+        ]
+    });
+
+    res.json({ Spots: aggregateSpotData(spots) });
 });
 
+// Get all spots owned by the current User:
+router.get('/current', requireAuth, async (req, res) => {
+
+    const spots = await Spot.findAll({
+        where: {
+            ownerId: req.user.id
+        },
+        include: [
+            { model: Review },
+            { model: SpotImage }
+        ]
+    });
+
+    res.json({ Spots: aggregateSpotData(spots) });
+});
 module.exports = router;
