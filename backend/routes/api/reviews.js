@@ -5,6 +5,7 @@ const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
 
+// Get current user's reviews:
 router.get('/current', requireAuth, async (req, res) => {
 
     const reviews = await Review.findAll({
@@ -96,6 +97,34 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
             id: image.id,
             url: image.url
         });
+    }
+});
+
+// Edit a review by review id:
+router.put('/:reviewId', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    const review = await Review.findByPk(req.params.reviewId);
+
+    if (!review) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Review couldn't be found"
+        next(err);
+    } else if (user.id != review.userId) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Authorization Error";
+        err.message = "User is not authorized for this action"
+        next(err);
+    } else {
+        await review.update({
+            review: req.body.review,
+            stars: req.body.stars
+        });
+
+        res.json(review);
     }
 });
 
