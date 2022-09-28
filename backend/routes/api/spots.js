@@ -125,4 +125,24 @@ router.get('/:spotId', requireAuth, async (req, res) => {
     res.json(spot);
 });
 
+// Create a new spot:
+router.post('/', requireAuth, async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    const owner = await User.findByPk(req.user.id);
+
+    const spot = await owner.createSpot({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    });
+    res.status(201);
+    res.json(spot);
+});
+
 module.exports = router;
