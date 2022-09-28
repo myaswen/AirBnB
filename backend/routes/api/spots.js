@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Spot, SpotImage, Review, sequelize } = require('../../db/models');
+const { Spot, SpotImage, Review, User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
@@ -74,4 +74,55 @@ router.get('/current', requireAuth, async (req, res) => {
 
     res.json({ Spots: aggregateSpotData(spots) });
 });
+
+// Get spot details by spot id:
+router.get('/:spotId', requireAuth, async (req, res) => {
+
+    let spot = await Spot.findByPk(req.params.spotId, {
+        include: [
+            { model: Review },
+            {
+                model: SpotImage,
+                attributes: ['id', 'url', 'preview']
+            },
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            }
+        ]
+    });
+
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: "Spot couldn't be found",
+            statusCode: res.statusCode
+        });
+    }
+
+    spot = spot.toJSON();
+
+    let starsSum = 0;
+    let starsCount = 0;
+
+    spot.Reviews.forEach(review => {
+        starsSum += parseInt(review.stars);
+        starsCount++;
+    });
+
+    if (starsCount > 0) {
+        spot.avgStarRating = starsSum / starsCount;
+    } else {
+        spot.avgStarRating = "No rating"
+    }
+
+    spot.numReviews = starsCount;
+    delete spot.Reviews;
+
+    spot.Owner = spot.User;
+    delete spot.User;
+
+    res.json(spot);
+});
+
 module.exports = router;
