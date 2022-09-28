@@ -152,6 +152,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
                 }
             ]
         });
+
         res.json({ Reviews: reviews });
     }
 });
@@ -172,6 +173,7 @@ router.post('/', requireAuth, async (req, res) => {
         description,
         price
     });
+
     res.status(201);
     res.json(spot);
 });
@@ -209,7 +211,50 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
         res.json(response);
     }
+});
 
+// Add a review to a spot by spot id:
+router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    const spot = await Spot.findByPk(req.params.spotId, {
+        include: {
+            model: Review
+        }
+    });
+
+    let userHasReview = (user, spot) => {
+        spot = spot.toJSON();
+        for (let review of spot.Reviews) {
+            if (review.userId === user.id) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    if (!spot) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Spot couldn't be found"
+        next(err);
+    } else if (userHasReview(user, spot)) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Forbidden Error";
+        err.message = "User already has a review for this spot"
+        next(err);
+    } else {
+        const review = await spot.createReview({
+            userId: req.user.id,
+            review: req.body.review,
+            stars: req.body.stars
+        });
+
+        res.status(201);
+        res.json(review);
+    }
 });
 
 // Edit a spot:
@@ -246,7 +291,6 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
 
         res.json(spot);
     }
-
 });
 
 // Delete a spot:
