@@ -49,4 +49,54 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json({ Reviews: reviewsList });
 });
 
+// Add an image to a review by review id:
+router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    const review = await Review.findByPk(req.params.reviewId, {
+        include: {
+            model: ReviewImage
+        }
+    });
+
+    let imageMaxReached = (user, review) => {
+        let count = 0;
+        review = review.toJSON();
+
+        for (let image of review.ReviewImages) count++;
+        if (count >= 10) return true;
+
+        return false;
+    };
+
+    if (!review) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Review couldn't be found"
+        next(err);
+    } else if (user.id != review.userId) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Authorization Error";
+        err.message = "User is not authorized for this action"
+        next(err);
+    } else if (imageMaxReached(user, review)) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Forbidden Error";
+        err.message = "Maximum number of images for this resource was reached"
+        next(err);
+    } else {
+        const image = await review.createReviewImage({
+            url: req.body.url
+        });
+
+        res.json({
+            id: image.id,
+            url: image.url
+        });
+    }
+});
+
 module.exports = router;
