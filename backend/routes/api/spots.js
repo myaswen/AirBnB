@@ -76,7 +76,7 @@ router.get('/current', requireAuth, async (req, res) => {
 });
 
 // Get spot details by spot id:
-router.get('/:spotId', requireAuth, async (req, res) => {
+router.get('/:spotId', async (req, res) => {
 
     let spot = await Spot.findByPk(req.params.spotId, {
         include: [
@@ -178,6 +178,42 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     }
 
     res.json(response);
+});
+
+// Edit a spot:
+router.put('/:spotId', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Spot couldn't be found"
+        next(err);
+    } else if (user.id != spot.ownerId) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Authorization Error";
+        err.message = "User is not authorized for this action"
+        next(err);
+    }
+
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    await spot.update({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    });
+
+    res.json(spot);
 });
 
 module.exports = router;
