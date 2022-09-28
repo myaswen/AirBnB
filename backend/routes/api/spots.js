@@ -163,21 +163,22 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         err.title = "Authorization Error";
         err.message = "User is not authorized for this action"
         next(err);
+    } else {
+        const image = await spot.createSpotImage({
+            url: req.body.url,
+            preview: req.body.preview
+        });
+
+        const { id, url, preview } = image;
+        const response = {
+            id,
+            url,
+            preview
+        }
+
+        res.json(response);
     }
 
-    const image = await spot.createSpotImage({
-        url: req.body.url,
-        preview: req.body.preview
-    });
-
-    const { id, url, preview } = image;
-    const response = {
-        id,
-        url,
-        preview
-    }
-
-    res.json(response);
 });
 
 // Edit a spot:
@@ -198,22 +199,50 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
         err.title = "Authorization Error";
         err.message = "User is not authorized for this action"
         next(err);
+    } else {
+        const { address, city, state, country, lat, lng, name, description, price } = req.body;
+        await spot.update({
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        });
+
+        res.json(spot);
     }
 
-    const { address, city, state, country, lat, lng, name, description, price } = req.body;
-    await spot.update({
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price
-    });
+});
 
-    res.json(spot);
+// Delete a spot:
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Spot couldn't be found"
+        next(err);
+    } else if (user.id != spot.ownerId) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Authorization Error";
+        err.message = "User is not authorized for this action"
+        next(err);
+    } else {
+        await spot.destroy();
+        res.json({
+            message: "Successfully deleted",
+            statusCode: res.statusCode
+        })
+    }
 });
 
 module.exports = router;
