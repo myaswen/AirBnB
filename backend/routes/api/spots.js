@@ -118,12 +118,12 @@ router.get('/', async (req, res, next) => {
         query.limit = size;
         query.offset = size * (page - 1);
 
-        if (maxLat) query.where.Lat = { [Op.lt]: maxLat };
-        if (minLat) query.where.Lat = { [Op.gt]: minLat };
-        if (maxLng) query.where.Lng = { [Op.lt]: maxLng };
-        if (minLng) query.where.Lng = { [Op.gt]: minLng };
-        if (maxPrice) query.where.Price = { [Op.lt]: maxPrice };
-        if (minPrice) query.where.Price = { [Op.gt]: minPrice };
+        if (maxLat) query.where.lat = { [Op.lt]: maxLat };
+        if (minLat) query.where.lat = { [Op.gt]: minLat };
+        if (maxLng) query.where.lng = { [Op.lt]: maxLng };
+        if (minLng) query.where.lng = { [Op.gt]: minLng };
+        if (maxPrice) query.where.price = { [Op.lt]: maxPrice };
+        if (minPrice) query.where.price = { [Op.gt]: minPrice };
 
         const spots = await Spot.findAll(query);
 
