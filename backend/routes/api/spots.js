@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
@@ -154,6 +154,42 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         });
 
         res.json({ Reviews: reviews });
+    }
+});
+
+// Get all bookings of a spot:
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+
+    const user = await User.findByPk(req.user.id);
+    let spot = await Spot.findByPk(req.params.spotId, {
+        include: {
+            model: Booking,
+            include: {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            }
+         }
+    });
+
+    if (!spot) {
+        const err = new Error("Not Found");
+        err.status = 404;
+        err.title = "Resource not found";
+        err.message = "Spot couldn't be found"
+        next(err);
+    } else if (user.id === spot.ownerId) {
+        spot = spot.toJSON();
+        res.json({ Bookings: spot.Bookings });
+    } else {
+        spot = spot.toJSON();
+        spot.Bookings.forEach(booking => {
+            delete booking.User;
+            delete booking.id;
+            delete booking.userId;
+            delete booking.createdAt;
+            delete booking.updatedAt;
+        });
+        res.json({ Bookings: spot.Bookings });
     }
 });
 
