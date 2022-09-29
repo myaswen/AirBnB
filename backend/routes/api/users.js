@@ -38,22 +38,45 @@ const validateSignup = [
 ];
 
 // Sign up
-router.post('/', validateSignup, async (req, res) => {
+router.post('/', validateSignup, async (req, res, next) => {
     const { firstName, lastName, email, password, username } = req.body;
-    const user = await User.signup({ firstName, lastName, email, username, password });
 
-    const token = await setTokenCookie(res, user);
+    const currentUsers = await User.findAll({
+        attributes: ['username', 'email']
+    });
 
-    const response = {
-        id: user.id,
-        firstName,
-        lastName,
-        email,
-        username,
-        token
+    let errors = {};
+    for (let currentUser of currentUsers) {
+        if (email === currentUser.email) {
+            errors.email = "User with that email already exists";
+        }
+        if (username === currentUser.username) {
+            errors.username = "User with that username already exists";
+        }
     }
+    if (errors.email || errors.username) {
+        const err = new Error("Forbidden");
+        err.status = 403;
+        err.title = "Authorization Error";
+        err.message = "User already exists";
+        err.errors = errors;
+        next(err);
+    } else {
+        const user = await User.signup({ firstName, lastName, email, username, password });
 
-    return res.json(response);
+        const token = await setTokenCookie(res, user);
+
+        const response = {
+            id: user.id,
+            firstName,
+            lastName,
+            email,
+            username,
+            token
+        }
+
+        return res.json(response);
+    }
 });
 
 module.exports = router;
