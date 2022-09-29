@@ -2,6 +2,7 @@ const express = require('express');
 
 const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -73,16 +74,65 @@ let dateConflict = (startDate, endDate, bookings) => {
 }
 
 // Get all spots:
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 
-    const spots = await Spot.findAll({
-        include: [
-            { model: Review },
-            { model: SpotImage }
-        ]
-    });
+    let { page, size, maxLat, minLat, maxLng, minLng, maxPrice, minPrice } = req.query;
+    page = parseInt(page);
+    size = parseInt(size);
+    maxLat = parseFloat(maxLat);
+    minLat = parseFloat(minLat);
+    maxLng = parseFloat(maxLng);
+    minLng = parseFloat(minLng);
+    maxPrice = parseFloat(maxPrice);
+    minPrice = parseFloat(minPrice);
 
-    res.json({ Spots: aggregateSpotData(spots) });
+    let errors = {};
+    if (page < 1) errors.page = "Page must be greater than or equal to 1";
+    if (size < 1) errors.size = "Size must be greater than or equal to 1";
+    if (maxLat < -90 || maxLat > 90) errors.maxLat = "Maximum latitude is invalid";
+    if (minLat < -90 || minLat > 90) errors.minLat = "Minimum latitude is invalid";
+    if (maxLng < -180 || maxLng > 180) errors.maxLng = "Maximum longitude is invalid";
+    if (minLng < -180 || minLng > 180) errors.minLng = "Minimum longitude is invalid";
+    if (maxPrice < 0) errors.maxPrice = "Maximum price must be greater than or equal to 0";
+    if (minPrice < 0) errors.minPrice = "Minimum price must be greater than or equal to 0";
+
+    if (errors.page || errors.size || errors.maxLat || errors.minLat || errors.maxLng || errors.minLng || errors.maxPrice || errors.minPrice) {
+        const err = new Error("Validation");
+        err.status = 400;
+        err.title = "Validation Error";
+        err.message = "Validation Error";
+        err.errors = errors;
+        next(err);
+    } else {
+
+        let query = {
+            where: {},
+            include: [
+                { model: Review },
+                { model: SpotImage }
+            ]
+        };
+
+        if (!page || page > 10) page = 1;
+        if (!size || size > 20) size = 20;
+        query.limit = size;
+        query.offset = size * (page - 1);
+
+        if (maxLat) query.where.Lat = { [Op.lt]: maxLat };
+        if (minLat) query.where.Lat = { [Op.gt]: minLat };
+        if (maxLng) query.where.Lng = { [Op.lt]: maxLng };
+        if (minLng) query.where.Lng = { [Op.gt]: minLng };
+        if (maxPrice) query.where.Price = { [Op.lt]: maxPrice };
+        if (minPrice) query.where.Price = { [Op.gt]: minPrice };
+
+        const spots = await Spot.findAll(query);
+
+        res.json({
+            Spots: aggregateSpotData(spots),
+            page,
+            size
+        });
+    }
 });
 
 // Get all spots owned by the current User:
