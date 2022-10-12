@@ -4,7 +4,7 @@ const { Booking, Spot, SpotImage } = require('../../db/models');
 
 const router = express.Router();
 
-// Booking date conflict checker:
+// Booking date conflict checker (excludes booking to be updated):
 const dateConflict = (startDate, endDate, bookings, currentBookingId) => {
     let conflictErrors = {};
 
