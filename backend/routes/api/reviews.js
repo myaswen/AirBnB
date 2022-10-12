@@ -29,7 +29,7 @@ router.get('/current', requireAuth, async (req, res) => {
         ]
     });
 
-    // Convert the 'reviews' promise to a POJO:
+    // Convert 'reviews' to a plain object:
     let reviewsList = []
     reviews.forEach(review => {
         reviewsList.push(review.toJSON());
@@ -53,20 +53,16 @@ router.get('/current', requireAuth, async (req, res) => {
 // Add an image to a review by review id:
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
-    const user = await User.findByPk(req.user.id);
     const review = await Review.findByPk(req.params.reviewId, {
         include: {
             model: ReviewImage
         }
     });
 
-    let imageMaxReached = (user, review) => {
+    let imageMaxReached = (review) => {
         let count = 0;
-        review = review.toJSON();
-
         for (let image of review.ReviewImages) count++;
         if (count >= 10) return true;
-
         return false;
     };
 
@@ -76,13 +72,13 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         err.title = "Resource not found";
         err.message = "Review couldn't be found"
         next(err);
-    } else if (user.id != review.userId) {
+    } else if (req.user.id != review.userId) {
         const err = new Error("Forbidden");
         err.status = 403;
         err.title = "Authorization Error";
         err.message = "User is not authorized for this action"
         next(err);
-    } else if (imageMaxReached(user, review)) {
+    } else if (imageMaxReached(review)) {
         const err = new Error("Forbidden");
         err.status = 403;
         err.title = "Forbidden Error";
@@ -103,7 +99,6 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 // Edit a review by review id:
 router.put('/:reviewId', requireAuth, async (req, res, next) => {
 
-    const user = await User.findByPk(req.user.id);
     const review = await Review.findByPk(req.params.reviewId);
 
     if (!review) {
@@ -112,7 +107,7 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
         err.title = "Resource not found";
         err.message = "Review couldn't be found"
         next(err);
-    } else if (user.id != review.userId) {
+    } else if (req.user.id != review.userId) {
         const err = new Error("Forbidden");
         err.status = 403;
         err.title = "Authorization Error";
@@ -131,7 +126,6 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
 // Delete a review:
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
 
-    const user = await User.findByPk(req.user.id);
     const review = await Review.findByPk(req.params.reviewId);
 
     if (!review) {
@@ -140,7 +134,7 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
         err.title = "Resource not found";
         err.message = "Review couldn't be found"
         next(err);
-    } else if (user.id != review.userId) {
+    } else if (req.user.id != review.userId) {
         const err = new Error("Forbidden");
         err.status = 403;
         err.title = "Authorization Error";

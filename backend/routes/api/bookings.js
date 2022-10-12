@@ -71,7 +71,6 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         include: {
             model: Spot,
             include: {
-                // All bookings are neccessary to check for date conflicts
                 model: Booking
             }
         }
@@ -135,7 +134,6 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
 
     const booking = await Booking.findByPk(req.params.bookingId, {
         include: {
-            // Spot used to check owner authorization
             model: Spot
         }
     });
