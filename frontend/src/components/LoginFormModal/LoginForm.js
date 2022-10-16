@@ -23,9 +23,9 @@ function LoginForm() {
         <div className='form_wrapper'>
             <h2>Log in</h2>
             <form onSubmit={handleSubmit}>
-                <ul>
-                    {errors.map((error, idx) => <li key={idx}>{error}</li>)}
-                </ul>
+                <div className='error_list'>
+                    {errors.map((error, idx) => <div key={idx}>{error}</div>)}
+                </div>
                 <div className='input_wrapper'>
                     <input
                         placeholder='Username or Email'

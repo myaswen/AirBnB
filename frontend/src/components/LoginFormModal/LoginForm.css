@@ -9,6 +9,7 @@
     text-align: center;
     padding-bottom: 16px;
     border-bottom: 1px solid #e7e7e7;
+    margin-bottom: 36px;
 }
 
 form {
@@ -36,8 +37,12 @@ form {
     padding: 20px 10px 20px 10px;
 }
 
+.input_wrapper>input:focus {
+    outline-style: none;
+}
+
 .submit_login_button {
-    margin: 20px;
+    margin: 20px 0px 40px 0px;
     padding: 16px;
     align-self: center;
     width: 420px;
@@ -45,4 +50,19 @@ form {
     border-radius: 12px;
     background-color: #ff385c;
     color: white;
+}
+
+.submit_login_button:hover {
+    cursor: pointer;
+}
+
+.error_list {
+    align-self: center;
+    width: 400px;
+    color: red;
+    font-size: 12px;
+}
+
+.error_list>div {
+    padding-bottom: 5px;
 }
