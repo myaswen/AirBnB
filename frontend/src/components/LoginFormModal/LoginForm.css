@@ -1,6 +1,48 @@
-form {
+.form_wrapper {
+    width: 500px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    width: 300px;
+    color: #3d3d3d;
+}
+
+.form_wrapper>h2 {
+    text-align: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+form {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    align-self: center;
+}
+
+.input_wrapper {
+    align-self: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.input_wrapper>input {
+    align-self: center;
+    width: 400px;
+    background-color: white;
+    border-bottom: 1px solid #e7e7e7;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 20px 10px 20px 10px;
+}
+
+.submit_login_button {
+    margin: 20px;
+    padding: 16px;
+    align-self: center;
+    width: 420px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ff385c;
+    color: white;
 }
