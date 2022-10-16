@@ -4,6 +4,10 @@
     background-color: white;
     padding: 16px 16px 16px 40px;
     font-size: 14px;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
 }
 
 .footer_wrapper>a {

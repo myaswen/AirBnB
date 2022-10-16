@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import * as sessionActions from "./store/session";
 import HeaderContent from "./components/HeaderContent";
-import BodyContent from "./components/BodyContent";
+import HomeBodyContent from "./components/HomeBodyContent";
 import FooterContent from "./components/FooterContent";
 
 function App() {
@@ -16,12 +16,12 @@ function App() {
   return (
     <>
       <HeaderContent isLoaded={isLoaded} />
-      <BodyContent />
-      <FooterContent />
       {isLoaded && (
         <Switch>
+          <Route exact path="/" component={HomeBodyContent}/>
         </Switch>
       )}
+      <FooterContent />
     </>
   );
 

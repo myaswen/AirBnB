@@ -1,0 +1,29 @@
+.card_wrapper {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #3d3d3d;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 14px;
+}
+
+.preview_image {
+    border-radius: 16px;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.location_rating {
+    margin-top: 10px;
+    margin-bottom: 2px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bold {
+    font-weight: bold;
+    font-size: 18px;
+}
