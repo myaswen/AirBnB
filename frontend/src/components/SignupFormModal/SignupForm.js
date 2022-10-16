@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
 import './SignupForm.css';
 
-const formatName = (name) => {
-    let firstLetter = name.slice(0, 1);
-    let otherLetters = name.slice(1);
-    firstLetter = firstLetter.toUpperCase();
-    otherLetters = otherLetters.toLowerCase();
-    return firstLetter + otherLetters;
-}
-
-function SignupFormPage() {
+function SignupForm() {
     const dispatch = useDispatch();
-    const sessionUser = useSelector((state) => state.session.user);
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -23,7 +13,13 @@ function SignupFormPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState([]);
 
-    if (sessionUser) return <Redirect to="/" />;
+    const formatName = (name) => {
+        let firstLetter = name.slice(0, 1);
+        let otherLetters = name.slice(1);
+        firstLetter = firstLetter.toUpperCase();
+        otherLetters = otherLetters.toLowerCase();
+        return firstLetter + otherLetters;
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -108,4 +104,4 @@ function SignupFormPage() {
     );
 }
 
-export default SignupFormPage;
+export default SignupForm;

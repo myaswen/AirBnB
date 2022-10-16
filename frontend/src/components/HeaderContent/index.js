@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
 import * as sessionActions from '../../store/session';
 import "./HeaderContent.css";
 
@@ -45,7 +46,7 @@ const HeaderContent = ({ isLoaded }) => {
         profileOptions = (
             <div className="profile-dropdown">
                 <div><LoginFormModal /></div>
-                <div><NavLink to="/signup">Sign Up</NavLink></div>
+                <div><SignupFormModal /></div>
             </div>
         );
     }
