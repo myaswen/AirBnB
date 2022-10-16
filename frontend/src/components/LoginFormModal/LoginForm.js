@@ -42,7 +42,7 @@ function LoginForm() {
                         required
                     />
                 </div>
-                <button className='submit_login_button' type="submit">Log In</button>
+                <button className='submit_form_button' type="submit">Log In</button>
             </form>
         </div>
     );
