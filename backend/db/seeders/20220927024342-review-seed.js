@@ -16,13 +16,13 @@ module.exports = {
     });
 
     const spotOne = await Spot.findOne({
-      where: { name: "App Academy" }
+      where: { name: "A Frame Retreat" }
     });
     const spotTwo = await Spot.findOne({
-      where: { name: "John's house" }
+      where: { name: "Mountain Retreat" }
     });
     const spotThree = await Spot.findOne({
-      where: { name: "Linda's house" }
+      where: { name: "Cabin in the woods" }
     });
 
     return queryInterface.bulkInsert('Reviews', [
@@ -50,7 +50,8 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete('Reviews', {
-      review: { [Op.in]: ["This was a great spot!", "Not much to do.", "I was robbed, literally."] }
+      // review: { [Op.in]: ["This was a great spot!", "Not much to do.", "I was robbed, literally."] }
+      userId: { [Op.in]: [userTwo.id, userThree.id, userOne.id] }
     }, {});
   }
 };
