@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
-import SignupFormPage from "./components/SignupFormPage";
 import * as sessionActions from "./store/session";
-import Navigation from "./components/Navigation";
+import HeaderContent from "./components/HeaderContent";
+import BodyContent from "./components/BodyContent";
+import FooterContent from "./components/FooterContent";
 
 function App() {
   const dispatch = useDispatch();
@@ -12,18 +13,18 @@ function App() {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
-  return isLoaded && (
+  return (
     <>
-      <Navigation isLoaded={isLoaded} />
+      <HeaderContent isLoaded={isLoaded} />
+      <BodyContent />
+      <FooterContent />
       {isLoaded && (
         <Switch>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route>
         </Switch>
       )}
     </>
   );
+
 }
 
 export default App;
