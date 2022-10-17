@@ -10,12 +10,11 @@ const SpotBodyContent = () => {
     const dispatch = useDispatch();
     const sessionUser = useSelector(state => state.session.user);
     const spotObject = useSelector(state => state.spots.singleSpot);
-    // console.log("SINGLE SPOT: ", spotObject);
 
     const spotImages = spotObject.SpotImages;
-
     const previewImage = spotImages?.find(image => image.preview === true);
-
+    let nonPreviewImages = spotImages?.filter(image => image.preview !== true)
+    nonPreviewImages = nonPreviewImages?.slice(0, 4);
 
     useEffect(() => {
         dispatch(TH_fetchSpot(spotId));
@@ -36,13 +35,17 @@ const SpotBodyContent = () => {
             <div className='preview_grid'>
                 <img className="preview_image_large" src={previewImage?.url} alt='main preview' />
                 <div className='sub_preview_grid'>
-
+                    {nonPreviewImages?.map(imageObj => (
+                        <img className="preview_images" key={imageObj.id} src={imageObj.url} alt='preview image' />
+                    ))}
                 </div>
             </div>
             <div className='subcontent_wrapper'>
                 <div className='othercontent_wrapper'>
-                    <div className='spot_description'>{spotObject?.description}</div>
-
+                    <div className='spot_description'>
+                        <h3>Hosted by {spotObject?.Owner?.firstName} {spotObject?.Owner?.lastName}</h3>
+                        {spotObject?.description}
+                        </div>
                 </div>
                 <div className='booking_wrapper'>
                     <div className='booking_card_STANDIN' />
