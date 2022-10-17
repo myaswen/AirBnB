@@ -1,18 +1,24 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { TH_fetchSpots } from '../../store/spotReducer';
+import { TH_fetchSpot } from '../../store/spotReducer';
 import './SpotBodyContent.css';
 
 const SpotBodyContent = () => {
     const { spotId } = useParams();
 
     const dispatch = useDispatch();
-    const spotObject = useSelector(state => state.spots.allspots[spotId]);
     const sessionUser = useSelector(state => state.session.user);
+    const spotObject = useSelector(state => state.spots.singleSpot);
+    // console.log("SINGLE SPOT: ", spotObject);
+
+    const spotImages = spotObject.SpotImages;
+
+    const previewImage = spotImages?.find(image => image.preview === true);
+
 
     useEffect(() => {
-        dispatch(TH_fetchSpots());
+        dispatch(TH_fetchSpot(spotId));
     }, [dispatch]);
 
     let ownerStatus
@@ -28,7 +34,7 @@ const SpotBodyContent = () => {
                 {ownerStatus && (<Link to="">Edit Spot</Link>)}
             </div>
             <div className='preview_grid'>
-                <img className="preview_image_large" src={spotObject?.previewImage} alt='main preview' />
+                <img className="preview_image_large" src={previewImage?.url} alt='main preview' />
                 <div className='sub_preview_grid'>
 
                 </div>
