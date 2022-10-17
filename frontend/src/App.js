@@ -18,7 +18,11 @@ function App() {
       <HeaderContent isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
-          <Route exact path="/" component={HomeBodyContent}/>
+          <Route exact path="/" component={HomeBodyContent} />
+          <Route path="/spots/:spotId" />
+          <Route>
+            <h1>Page Not Found</h1>
+          </Route>
         </Switch>
       )}
       <FooterContent />
