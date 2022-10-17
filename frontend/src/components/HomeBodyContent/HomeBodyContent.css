@@ -1,0 +1,6 @@
+.body_wrapper {
+    margin: 20px 40px 60px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

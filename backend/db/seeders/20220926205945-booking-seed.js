@@ -16,13 +16,13 @@ module.exports = {
     });
 
     const spotOne = await Spot.findOne({
-      where: { name: "App Academy" }
+      where: { name: "A Frame Retreat" }
     });
     const spotTwo = await Spot.findOne({
-      where: { name: "John's house" }
+      where: { name: "Mountain Retreat" }
     });
     const spotThree = await Spot.findOne({
-      where: { name: "Linda's house" }
+      where: { name: "Cabin in the woods" }
     });
 
     const startDateOne = new Date("2021-11-19");
