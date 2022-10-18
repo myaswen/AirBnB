@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_SPOTS = 'spots/loadSpots';
 const LOAD_SPOT = 'spots/loadSpot';
 const CREATE_SPOT = 'spots/createSpot';
+const EDIT_SPOT = 'spots/editSpot';
 
 export const AC_loadSpots = (spots) => {
     return {
@@ -25,6 +26,13 @@ export const AC_createSpot = (spot) => {
     }
 }
 
+export const AC_editSpot = (spot) => {
+    return {
+        type: EDIT_SPOT,
+        payload: spot
+    }
+}
+
 export const TH_fetchSpots = () => async (dispatch) => {
     const response = await fetch('/api/spots');
     const spots = await response.json();
@@ -36,7 +44,6 @@ export const TH_fetchSpot = (spotId) => async (dispatch) => {
     const spot = await response.json();
     dispatch(AC_loadSpot(spot));
 }
-
 
 export const TH_postSpot = (userInput, previewImage) => async (dispatch) => {
 
@@ -65,6 +72,38 @@ export const TH_postSpot = (userInput, previewImage) => async (dispatch) => {
         return formattedSpot;
     }
 }
+
+export const TH_editSpot = (spotId, userInput, previewImage) => async (dispatch) => {
+
+    const responseOne = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInput)
+    });
+
+    if (responseOne.ok) {
+        const unformattedSpot = await responseOne.json();
+
+        //TO DO: Delete previous preview image
+
+        // const previewImagePayload = { url: previewImage, preview: true };
+        // await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(previewImagePayload)
+        // });
+
+        const responseTwo = await fetch('/api/spots');
+        const spotsObject = await responseTwo.json();
+
+        const formattedSpot = spotsObject.Spots.find(spot => spot.id === unformattedSpot.id);
+
+        // AC_createSpot will accomplish the same goal as an edit:
+        dispatch(AC_createSpot(formattedSpot));
+        return formattedSpot;
+    }
+}
+
 
 const initialState = { allspots: {}, singleSpot: {} };
 

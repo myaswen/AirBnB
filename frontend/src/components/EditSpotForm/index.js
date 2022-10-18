@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import './EditSpotForm.css';
-import { TH_fetchSpots } from "../../store/spotReducer";
+import { TH_editSpot, TH_fetchSpots } from "../../store/spotReducer";
 
 const EditSpotForm = () => {
     const { spotId } = useParams();
@@ -65,13 +65,13 @@ const EditSpotForm = () => {
 
         console.log("NEW DATA", inputData, previewImage);
 
-        // let createdSpot = await dispatch(TH_postSpot(inputData, previewImage))
-        //     .catch(async (res) => {
-        //         const data = await res.json();
-        //         if (data && data.errors) setErrors(Object.values(data.errors));
-        //     });
+        let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previewImage))
+            .catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) setErrors(Object.values(data.errors));
+            });
 
-        // if (createdSpot) history.push(`/spots/${createdSpot.id}`)
+        if (editedSpot) history.push(`/spots/${editedSpot.id}`)
 
     }
 
