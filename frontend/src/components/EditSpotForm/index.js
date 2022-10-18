@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import './EditSpotForm.css';
-import { TH_editSpot, TH_fetchSpot } from "../../store/spotReducer";
+import { TH_deleteSpot, TH_editSpot, TH_fetchSpot } from "../../store/spotReducer";
 
 const EditSpotForm = () => {
     const { spotId } = useParams();
@@ -75,10 +75,15 @@ const EditSpotForm = () => {
 
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (deleteConfirm) {
-            console.log("SO IT SHALL BE DONE.");
-            history.push('/');
+            let deletionRes = await dispatch(TH_deleteSpot(spotId))
+                .catch(async (res) => {
+                    const data = await res.json();
+                    if (data && data.errors) setErrors(Object.values(data.errors));
+                });
+
+            if (deletionRes) history.push('/');
         } else {
             setDeleteConfirm(true);
         }
