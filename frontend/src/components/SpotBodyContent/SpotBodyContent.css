@@ -79,6 +79,7 @@
 
 .subcontent_wrapper {
     display: flex;
+    justify-content: space-between;
 }
 
 .booking_card_STANDIN {
