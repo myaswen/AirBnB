@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { TH_postSpot } from "../../store/spotReducer";
 import './CreateSpotForm.css';
 
 const CreateSpotForm = () => {
+    const history = useHistory();
     const dispatch = useDispatch();
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
@@ -20,7 +21,7 @@ const CreateSpotForm = () => {
     const sessionUser = useSelector((state) => state.session.user);
     if (!sessionUser) return <Redirect to="/" />;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors([]);
 
@@ -36,13 +37,14 @@ const CreateSpotForm = () => {
             description
         }
 
-        dispatch(TH_postSpot(inputData))
+        let createdSpot = await dispatch(TH_postSpot(inputData))
             .catch(async (res) => {
                 const data = await res.json();
                 if (data && data.errors) setErrors(Object.values(data.errors));
             });
 
-        // TO DO: redirect user or reset form inputs if success
+        if (createdSpot) history.push(`/spots/${createdSpot.id}`)
+
     }
 
     return (
