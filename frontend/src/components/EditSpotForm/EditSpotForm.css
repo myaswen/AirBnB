@@ -1,0 +1,18 @@
+.delete_spot_button {
+    align-self: center;
+    width: 100px;
+    background-color: brown;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.delete_spot_warning {
+    align-self: center;
+    width: 400px;
+    margin-bottom: 20px;
+    color: red;
+    text-align: center;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
@@ -8,6 +8,13 @@ import "./HeaderContent.css";
 
 const HeaderContent = ({ isLoaded }) => {
     const sessionUser = useSelector(state => state.session.user);
+
+    const checkSession = (e) => {
+        if (!sessionUser) {
+            e.preventDefault();
+            alert("Please log in to become a host.");
+        }
+    }
 
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
@@ -57,11 +64,14 @@ const HeaderContent = ({ isLoaded }) => {
                 <img src="https://i.imgur.com/2bUqbh2.png" width="40px" alt='logo' />
                 tbdbnb
             </NavLink>
-            <div onClick={toggleMenu} className="profile_menu_button">
-                <i className="fa-solid fa-bars menu_icon"></i>
-                <i className="fa-solid fa-circle-user profile_icon"></i>
+            <div className='nav_right'>
+                <Link onClick={checkSession} to="/spots/create">Become a host</Link>
+                <div onClick={toggleMenu} className="profile_menu_button">
+                    <i className="fa-solid fa-bars menu_icon"></i>
+                    <i className="fa-solid fa-circle-user profile_icon"></i>
+                </div>
+                {showMenu && isLoaded && profileOptions}
             </div>
-            {showMenu && isLoaded && profileOptions}
         </div>
     );
 }

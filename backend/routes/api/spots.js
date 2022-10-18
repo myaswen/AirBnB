@@ -108,7 +108,9 @@ router.get('/', async (req, res, next) => {
         };
 
         if (!page || page > 10) page = 1;
-        if (!size || size > 20) size = 20;
+        // if (!size || size > 20) size = 20;
+        if (!size) size = null;
+
         query.limit = size;
         query.offset = size * (page - 1);
 

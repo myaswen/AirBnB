@@ -1,9 +1,43 @@
+import { csrfFetch } from "./csrf";
+
 const LOAD_SPOTS = 'spots/loadSpots';
+const LOAD_SPOT = 'spots/loadSpot';
+const CREATE_SPOT = 'spots/createSpot';
+const EDIT_SPOT = 'spots/editSpot';
+const DELETE_SPOT = 'spots/deleteSpot';
 
 export const AC_loadSpots = (spots) => {
     return {
         type: LOAD_SPOTS,
         payload: spots
+    }
+}
+
+export const AC_loadSpot = (spot) => {
+    return {
+        type: LOAD_SPOT,
+        payload: spot
+    }
+}
+
+export const AC_createSpot = (spot) => {
+    return {
+        type: CREATE_SPOT,
+        payload: spot
+    }
+}
+
+export const AC_editSpot = (spot) => {
+    return {
+        type: EDIT_SPOT,
+        payload: spot
+    }
+}
+
+export const AC_deleteSpot = (spotId) => {
+    return {
+        type: DELETE_SPOT,
+        payload: spotId
     }
 }
 
@@ -13,6 +47,84 @@ export const TH_fetchSpots = () => async (dispatch) => {
     dispatch(AC_loadSpots(spots));
 }
 
+export const TH_fetchSpot = (spotId) => async (dispatch) => {
+    const response = await fetch(`/api/spots/${spotId}`);
+    const spot = await response.json();
+    dispatch(AC_loadSpot(spot));
+}
+
+export const TH_postSpot = (userInput, previewImage) => async (dispatch) => {
+
+    const responseOne = await csrfFetch('/api/spots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInput)
+    });
+
+    if (responseOne.ok) {
+        const unformattedSpot = await responseOne.json();
+
+        const previewImagePayload = { url: previewImage, preview: true };
+        await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(previewImagePayload)
+        });
+
+        const responseTwo = await fetch('/api/spots');
+        const spotsObject = await responseTwo.json();
+
+        const formattedSpot = spotsObject.Spots.find(spot => spot.id === unformattedSpot.id);
+
+        dispatch(AC_createSpot(formattedSpot));
+        return formattedSpot;
+    }
+}
+
+export const TH_editSpot = (spotId, userInput, previousPreviewId, previewImage) => async (dispatch) => {
+
+    const responseOne = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInput)
+    });
+
+    if (responseOne.ok) {
+        const unformattedSpot = await responseOne.json();
+
+        await csrfFetch(`/api/spot-images/${previousPreviewId}`, {
+            method: 'DELETE'
+        });
+
+        const previewImagePayload = { url: previewImage, preview: true };
+        await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(previewImagePayload)
+        });
+
+        const responseTwo = await fetch('/api/spots');
+        const spotsObject = await responseTwo.json();
+
+        const formattedSpot = spotsObject.Spots.find(spot => spot.id === unformattedSpot.id);
+
+        // AC_createSpot will accomplish the same goal as an edit:
+        dispatch(AC_createSpot(formattedSpot));
+        return formattedSpot;
+    }
+}
+
+export const TH_deleteSpot = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE'
+    });
+
+    if (response.ok) {
+        dispatch(AC_deleteSpot(spotId));
+        return true;
+    }
+}
+
 const initialState = { allspots: {}, singleSpot: {} };
 
 const spotsReducer = (state = initialState, action) => {
@@ -20,6 +132,18 @@ const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS:
             newState = { ...state, allspots: normalizeData([...action.payload.Spots]) };
+            return newState;
+        case LOAD_SPOT:
+            newState = { ...state, singleSpot: { ...action.payload } };
+            return newState;
+        case CREATE_SPOT:
+            newState = { ...state, allspots: { ...state.allspots } };
+            newState.allspots[action.payload.id] = action.payload;
+            return newState;
+        case DELETE_SPOT:
+            newState = { ...state, allspots: { ...state.allspots } };
+            delete newState.allspots[action.payload];
+            newState.singleSpot = {};
             return newState;
         default:
             return state;

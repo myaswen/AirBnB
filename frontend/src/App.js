@@ -5,6 +5,9 @@ import * as sessionActions from "./store/session";
 import HeaderContent from "./components/HeaderContent";
 import HomeBodyContent from "./components/HomeBodyContent";
 import FooterContent from "./components/FooterContent";
+import SpotBodyContent from "./components/SpotBodyContent";
+import CreateSpotForm from "./components/CreateSpotForm";
+import EditSpotForm from "./components/EditSpotForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,7 +22,9 @@ function App() {
       {isLoaded && (
         <Switch>
           <Route exact path="/" component={HomeBodyContent} />
-          <Route path="/spots/:spotId" />
+          <Route path="/spots/create" component={CreateSpotForm} />
+          <Route path="/spots/:spotId/edit" component={EditSpotForm} />
+          <Route path="/spots/:spotId" component={SpotBodyContent} />
           <Route>
             <h1>Page Not Found</h1>
           </Route>
