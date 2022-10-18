@@ -73,7 +73,7 @@ export const TH_postSpot = (userInput, previewImage) => async (dispatch) => {
     }
 }
 
-export const TH_editSpot = (spotId, userInput, previewImage) => async (dispatch) => {
+export const TH_editSpot = (spotId, userInput, previousPreviewId, previewImage) => async (dispatch) => {
 
     const responseOne = await csrfFetch(`/api/spots/${spotId}`, {
         method: 'PUT',
@@ -84,14 +84,16 @@ export const TH_editSpot = (spotId, userInput, previewImage) => async (dispatch)
     if (responseOne.ok) {
         const unformattedSpot = await responseOne.json();
 
-        //TO DO: Delete previous preview image
+        await csrfFetch(`/api/spot-images/${previousPreviewId}`, {
+            method: 'DELETE'
+        });
 
-        // const previewImagePayload = { url: previewImage, preview: true };
-        // await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(previewImagePayload)
-        // });
+        const previewImagePayload = { url: previewImage, preview: true };
+        await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(previewImagePayload)
+        });
 
         const responseTwo = await fetch('/api/spots');
         const spotsObject = await responseTwo.json();

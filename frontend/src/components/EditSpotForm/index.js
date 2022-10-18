@@ -3,18 +3,20 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import './EditSpotForm.css';
-import { TH_editSpot, TH_fetchSpots } from "../../store/spotReducer";
+import { TH_editSpot, TH_fetchSpot } from "../../store/spotReducer";
 
 const EditSpotForm = () => {
     const { spotId } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(TH_fetchSpots());
-    }, [dispatch]);
+    const spotToEdit = useSelector(state => state.spots.singleSpot);
+    const spotImages = spotToEdit.SpotImages;
+    const previousPreviewImage = spotImages?.find(image => image.preview === true);
 
-    const spotToEdit = useSelector(state => state.spots.allspots[spotId])
+    useEffect(() => {
+        dispatch(TH_fetchSpot(spotId));
+    }, [dispatch]);
 
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [address, setAddress] = useState("");
@@ -30,7 +32,7 @@ const EditSpotForm = () => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        if (spotToEdit) {
+        if (Object.keys(spotToEdit).length > 0) {
             setAddress(spotToEdit.address);
             setCity(spotToEdit.city);
             setState(spotToEdit.state);
@@ -39,7 +41,7 @@ const EditSpotForm = () => {
             setLng(spotToEdit.lng);
             setName(spotToEdit.name);
             setPrice(spotToEdit.price);
-            setPreviewImage(spotToEdit.previewImage);
+            setPreviewImage(previousPreviewImage.url)
             setDescription(spotToEdit.description);
         }
     }, [spotToEdit]);
@@ -63,9 +65,7 @@ const EditSpotForm = () => {
             description
         }
 
-        console.log("NEW DATA", inputData, previewImage);
-
-        let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previewImage))
+        let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previousPreviewImage.id, previewImage))
             .catch(async (res) => {
                 const data = await res.json();
                 if (data && data.errors) setErrors(Object.values(data.errors));
