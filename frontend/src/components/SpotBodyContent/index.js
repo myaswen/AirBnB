@@ -51,7 +51,7 @@ const SpotBodyContent = () => {
                     <h2>{spotObject?.name}</h2>
                     <div className='location_header'>{spotObject?.city}, {spotObject?.state}</div>
                 </div>
-                {ownerStatus && (<Link to="">Edit Spot</Link>)}
+                {ownerStatus && (<Link to={`/spots/${spotId}/edit`}>Edit Spot</Link>)}
             </div>
             {imageContent}
             <div className='subcontent_wrapper'>
