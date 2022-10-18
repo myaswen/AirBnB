@@ -38,7 +38,8 @@ export const TH_fetchSpot = (spotId) => async (dispatch) => {
 }
 
 
-export const TH_postSpot = (userInput) => async (dispatch) => {
+export const TH_postSpot = (userInput, previewImage) => async (dispatch) => {
+
     const responseOne = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,16 +49,18 @@ export const TH_postSpot = (userInput) => async (dispatch) => {
     if (responseOne.ok) {
         const unformattedSpot = await responseOne.json();
 
-        console.log("NOT FORMATTED SPOT:", unformattedSpot);
+        const previewImagePayload = { url: previewImage, preview: true };
+        await csrfFetch(`/api/spots/${unformattedSpot.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(previewImagePayload)
+        });
 
-        const responseTwo = await fetch('/api/spots?');
+        const responseTwo = await fetch('/api/spots');
         const spotsObject = await responseTwo.json();
-
-        console.log("spotsObjectREDUX", spotsObject);
 
         const formattedSpot = spotsObject.Spots.find(spot => spot.id === unformattedSpot.id);
 
-        console.log("FORMATTED SPOT:", formattedSpot);
         dispatch(AC_createSpot(formattedSpot));
         return formattedSpot;
     }

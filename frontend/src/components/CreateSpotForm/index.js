@@ -15,6 +15,7 @@ const CreateSpotForm = () => {
     const [lng, setLng] = useState("");
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
+    const [previewImage, setPreviewImage] = useState("");
     const [description, setDescription] = useState("");
     const [errors, setErrors] = useState([]);
 
@@ -37,7 +38,7 @@ const CreateSpotForm = () => {
             description
         }
 
-        let createdSpot = await dispatch(TH_postSpot(inputData))
+        let createdSpot = await dispatch(TH_postSpot(inputData, previewImage))
             .catch(async (res) => {
                 const data = await res.json();
                 if (data && data.errors) setErrors(Object.values(data.errors));
@@ -52,9 +53,6 @@ const CreateSpotForm = () => {
             <div className='create_spot_form_wrapper'>
                 <h2>Create a spot</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className='error_list'>
-                        {errors.map((error, idx) => <div key={idx}>{error}</div>)}
-                    </div>
                     <div className='input_wrapper'>
                         <input
                             placeholder='Address'
@@ -112,14 +110,23 @@ const CreateSpotForm = () => {
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
+                        <input
+                            placeholder="Preview image URL"
+                            type="text"
+                            required
+                            value={previewImage}
+                            onChange={(e) => setPreviewImage(e.target.value)}
+                        />
                         <textarea
                             placeholder="Enter a description"
-                            // cols="30"
                             rows="16"
                             required
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
+                    </div>
+                    <div className='error_list'>
+                        {errors.map((error, idx) => <div key={idx}>{error}</div>)}
                     </div>
                     <button className="submit_form_button" type="submit">Create</button>
                 </form>

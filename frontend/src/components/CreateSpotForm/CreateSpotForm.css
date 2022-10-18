@@ -33,6 +33,11 @@
     padding: 10px;
     resize: none;
 }
+
 .create_spot_form_wrapper textarea:focus {
     outline-style: none;
+}
+
+.create_spot_form_wrapper .error_list {
+    margin-top: 20px;
 }
