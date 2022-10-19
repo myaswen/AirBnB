@@ -53,7 +53,6 @@
     padding-left: 32px;
     padding-bottom: 16px;
     padding-top: 16px;
-    cursor: pointer;
 }
 
 .profile-dropdown > div:hover {
@@ -79,4 +78,8 @@
     text-decoration: none;
     color: #3d3d3d;
     font-size: 14px;
+}
+
+.logout_button:hover {
+    cursor: pointer;
 }

@@ -2,6 +2,7 @@
     border-radius: 12px;
     border: 1px solid #e7e7e7;
     width: 400px;
+    box-shadow: 0 0 10px #e7e7e7;
 }
 
 .booking_price_reviews {
@@ -77,4 +78,19 @@
 
 .reserve_booking_button:hover {
     cursor: pointer;
+}
+
+.reserve_noSession {
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 8px;
+    background-color: #949494;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
+
+.reserve_noSession > .login_button {
+    padding: 16px 0px 16px 0px;
 }

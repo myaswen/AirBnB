@@ -4,3 +4,7 @@
     align-items: flex-end;
     width: 300px;
 }
+
+.signup_button:hover {
+    cursor: pointer;
+}
