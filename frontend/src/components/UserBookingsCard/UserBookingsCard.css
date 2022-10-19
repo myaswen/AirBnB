@@ -63,6 +63,12 @@
     font-size: 12px;
 }
 
+@media screen and (max-width: 1400px) {
+    .user_bookings_card {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
 @media screen and (max-width: 1200px) {
     .user_bookings_card {
         grid-template-columns: 1fr;
