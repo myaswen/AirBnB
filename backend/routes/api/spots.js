@@ -341,6 +341,9 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         err.status = 403;
         err.title = "Forbidden Action";
         err.message = "User is the owner of this spot"
+        err.errors = {
+            ownerConflict: "Cannot make a reservation for a spot you are hosting"
+        };
         next(err);
     } else if (startDate >= endDate) {
         const err = new Error("Validation");

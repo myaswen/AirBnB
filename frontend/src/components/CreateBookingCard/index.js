@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { TH_createBooking } from "../../store/bookingReducer";
 import LoginFormModal from "../LoginFormModal";
 import './CreateBookingCard.css';
 
@@ -31,15 +32,13 @@ const CreateBookingCard = ({ sessionUser, currentSpot }) => {
         console.log("SPOT ID: ", currentSpot.id);
         console.log("CURRENT USER: ", sessionUser);
 
+        let createSuccess = await dispatch(TH_createBooking(currentSpot.id, inputData))
+            .catch(async (res) => {
+                const data = await res.json();
+                if (data && data.errors) setErrors(Object.values(data.errors));
+            });
 
-        // // TO DO - REFACTOR FOR BOOKINGS:
-        // let createdSpot = await dispatch(TH_postSpot(inputData, previewImage))
-        //     .catch(async (res) => {
-        //         const data = await res.json();
-        //         if (data && data.errors) setErrors(Object.values(data.errors));
-        //     });
-
-        // if (createdSpot) history.push(`/spots/${createdSpot.id}`)
+        if (createSuccess) history.push('/reservations')
 
     }
 
@@ -77,6 +76,9 @@ const CreateBookingCard = ({ sessionUser, currentSpot }) => {
                         />
                     </label>
                 </div>
+            </div>
+            <div className='error_list'>
+                {errors.map((error, idx) => <div key={idx}>{error}</div>)}
             </div>
             {sessionUser && (
                 <div className="reserve_button_container">

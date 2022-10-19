@@ -94,3 +94,7 @@
 .reserve_noSession > .login_button {
     padding: 16px 0px 16px 0px;
 }
+
+.create_booking_wrapper .error_list {
+    text-align: center;
+}
