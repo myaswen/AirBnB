@@ -1,4 +1,5 @@
 import React from "react";
+import UserBookingsCard from "../UserBookingsCard";
 import './UserBookingsPage.css';
 
 const UserBookingsPage = () => {
@@ -6,6 +7,7 @@ const UserBookingsPage = () => {
         <div className="user_bookings_wrapper">
             <h2>Trips</h2>
             <h3>Upcoming Reservations</h3>
+            <UserBookingsCard />
         </div>
     );
 }
