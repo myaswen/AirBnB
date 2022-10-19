@@ -5,6 +5,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 10px #e7e7e7;
+    margin-bottom: 24px;
 }
 
 .spot_host_name {

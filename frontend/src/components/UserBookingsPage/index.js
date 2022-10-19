@@ -22,6 +22,7 @@ const UserBookingsPage = () => {
         <div className="user_bookings_wrapper">
             <h2>Trips</h2>
             <h3>Your Reservations</h3>
+            <div className="user_booking_cards_wrapper">
             {
                 bookingsIds.map(id => (
                     <UserBookingsCard
@@ -30,6 +31,7 @@ const UserBookingsPage = () => {
                     />
                 ))
             }
+            </div>
         </div>
     );
 }

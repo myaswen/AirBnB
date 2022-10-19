@@ -2,7 +2,6 @@ import React from "react";
 import './UserBookingsCard.css';
 
 const UserBookingsCard = ({ booking }) => {
-    console.log("FROM BOOKING CARD: ", booking.startDate, booking.endDate)
     return (
         <div className="user_bookings_card">
             <div className="user_booking_info">
@@ -14,11 +13,11 @@ const UserBookingsCard = ({ booking }) => {
                     <div className="res_dates">
                         <div>
                             <div className="res_date_lables">CHECK-IN</div>
-                            {new Date(booking.startDate).toDateString()}
+                            {booking.startDate.split('T')[0]}
                         </div>
                         <div>
                             <div className="res_date_lables">CHECKOUT</div>
-                            {new Date(booking.endDate).toDateString()}
+                            {booking.endDate.split('T')[0]}
                         </div>
                     </div>
                     <div className="res_address">

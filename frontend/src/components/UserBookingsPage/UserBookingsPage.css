@@ -1,7 +1,13 @@
 .user_bookings_wrapper {
     margin-left: 300px;
     margin-right: 300px;
+    margin-bottom: 60px;
     color: #3d3d3d;
+}
+
+.user_booking_cards_wrapper {
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .user_bookings_wrapper > h2 {
