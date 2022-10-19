@@ -12,7 +12,7 @@
     margin-bottom: 36px;
 }
 
-form {
+.form_wrapper form {
     padding: 0;
     margin: 0;
     width: 100%;
