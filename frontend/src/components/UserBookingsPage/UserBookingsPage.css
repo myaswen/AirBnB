@@ -1,0 +1,16 @@
+.user_bookings_wrapper {
+    /* background-color: grey; */
+    margin-left: 300px;
+    margin-right: 300px;
+    color: #3d3d3d;
+}
+
+.user_bookings_wrapper > h2 {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.user_bookings_wrapper > h3 {
+    font-weight: bold;
+    font-size: 20px;
+}

@@ -8,6 +8,7 @@ import FooterContent from "./components/FooterContent";
 import SpotBodyContent from "./components/SpotBodyContent";
 import CreateSpotForm from "./components/CreateSpotForm";
 import EditSpotForm from "./components/EditSpotForm";
+import UserBookingsPage from "./components/UserBookingsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/spots/create" component={CreateSpotForm} />
           <Route path="/spots/:spotId/edit" component={EditSpotForm} />
           <Route path="/spots/:spotId" component={SpotBodyContent} />
+          <Route path="/reservations" component={UserBookingsPage} />
           <Route>
             <h1>Page Not Found</h1>
           </Route>

@@ -46,6 +46,7 @@ const HeaderContent = ({ isLoaded }) => {
             <div className="profile-dropdown">
                 <div>{sessionUser.username}</div>
                 <div>{sessionUser.email}</div>
+                <div><Link to="/reservations">Reservations</Link></div>
                 <div onClick={logout} className="logout_button">Logout</div>
             </div>
         );
