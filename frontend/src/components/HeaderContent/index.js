@@ -9,13 +9,6 @@ import "./HeaderContent.css";
 const HeaderContent = ({ isLoaded }) => {
     const sessionUser = useSelector(state => state.session.user);
 
-    const checkSession = (e) => {
-        if (!sessionUser) {
-            e.preventDefault();
-            alert("Please log in to become a host.");
-        }
-    }
-
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
 
@@ -46,7 +39,8 @@ const HeaderContent = ({ isLoaded }) => {
             <div className="profile-dropdown">
                 <div>{sessionUser.username}</div>
                 <div>{sessionUser.email}</div>
-                <div onClick={logout}>Logout</div>
+                <div><Link to="/reservations">Reservations</Link></div>
+                <div onClick={logout} className="logout_button">Logout</div>
             </div>
         );
     } else {
@@ -65,7 +59,11 @@ const HeaderContent = ({ isLoaded }) => {
                 tbdbnb
             </NavLink>
             <div className='nav_right'>
-                <Link onClick={checkSession} to="/spots/create">Become a host</Link>
+                {/* <Link onClick={checkSession} to="/spots/create">Become a host</Link> */}
+                {sessionUser && <Link to="/spots/create">Become a host</Link>}
+                {!sessionUser && (
+                    <div className='login_to_host'>Login to start hosting!</div>
+                )}
                 <div onClick={toggleMenu} className="profile_menu_button">
                     <i className="fa-solid fa-bars menu_icon"></i>
                     <i className="fa-solid fa-circle-user profile_icon"></i>

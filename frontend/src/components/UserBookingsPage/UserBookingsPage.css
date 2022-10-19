@@ -1,0 +1,28 @@
+.user_bookings_wrapper {
+    margin-left: 300px;
+    margin-right: 300px;
+    margin-bottom: 60px;
+    color: #3d3d3d;
+}
+
+.user_booking_cards_wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.user_bookings_wrapper > h2 {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.user_bookings_wrapper > h3 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+    .user_bookings_wrapper {
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+}
