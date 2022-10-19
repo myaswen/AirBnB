@@ -321,6 +321,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
 // Create a booking:
 router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
+    const today = new Date();
 
     const spot = await Spot.findByPk(req.params.spotId, {
         include: {
@@ -343,6 +344,15 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         err.message = "User is the owner of this spot"
         err.errors = {
             ownerConflict: "Cannot make a reservation for a spot you are hosting"
+        };
+        next(err);
+    } else if (startDate < today) {
+        const err = new Error("Validation");
+        err.status = 400;
+        err.title = "Validation Error";
+        err.message = "Validation Error";
+        err.errors = {
+            timeTravel: "Cannot make a reservation same day or in the past"
         };
         next(err);
     } else if (startDate >= endDate) {
