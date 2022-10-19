@@ -1,22 +1,26 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { TH_deleteBooking } from "../../store/bookingReducer";
 import './UserBookingsCard.css';
 
 const UserBookingsCard = ({ booking }) => {
+    const dispatch = useDispatch();
     const [deleteConfirm, setDeleteConfirm] = useState();
+    const [deleteMessage, setDeleteMessage] = useState('Are you sure? Click again to proceed:');
+    const [deleteError, setDeleteError] = useState(false);
 
     const handleDelete = async () => {
         if (deleteConfirm) {
-            // // REFACTOR FOR DELETE BOOKING:
-            // let deletionRes = await dispatch(TH_deleteSpot(spotId))
-            //     .catch(async (res) => {
-            //         const data = await res.json();
-            //         if (data && data.errors) setErrors(Object.values(data.errors));
-            //     });
-
-            // if (deletionRes) history.push('/');
-            console.log("SO IT SHALL BE DONE");
+            await dispatch(TH_deleteBooking(booking.id))
         } else {
-            setDeleteConfirm(true);
+            const today = new Date();
+            const startDateObject = new Date(booking.startDate);
+            if (today > startDateObject) {
+                setDeleteMessage('Cannot cancel past reservations.');
+                setDeleteError(true);
+            } else {
+                setDeleteConfirm(true);
+            }
         }
     }
 
@@ -47,10 +51,15 @@ const UserBookingsCard = ({ booking }) => {
                 <div className="delete_booking_container">
                     {deleteConfirm && (
                         <div className="delete_booking_warning">
-                            Are you sure? Click again to proceed:
+                            {deleteMessage}
                         </div>
                     )}
-                    <button onClick={handleDelete} className="delete_booking_button">Cancel</button>
+                    {deleteError && (
+                        <div className="delete_booking_warning">
+                            {deleteMessage}
+                        </div>
+                    )}
+                    {!deleteError && <button onClick={handleDelete} className="delete_booking_button">Cancel</button>}
                 </div>
             </div>
             <div className="booking_spot_preview">
