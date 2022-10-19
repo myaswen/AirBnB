@@ -1,7 +1,7 @@
 .user_bookings_card {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 220px;
+    height: 240px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 10px #e7e7e7;
@@ -33,7 +33,6 @@
     display: flex;
     flex-direction: column;
     margin: 20px;
-
 }
 
 .bookings_date_address {
@@ -62,6 +61,32 @@
 
 .res_date_lables {
     font-size: 12px;
+}
+
+.delete_booking_container {
+    display: flex;
+    margin-top: 10px;
+}
+
+.delete_booking_button {
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(255, 98, 98);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    width: fit-content;
+    padding-left: 0px;
+}
+
+.delete_booking_button:hover {
+    cursor: pointer;
+}
+
+.delete_booking_warning {
+    color: rgb(255, 98, 98);
+    font-size: 14px;
+    margin-right: 8px;
 }
 
 @media screen and (max-width: 1400px) {
