@@ -54,10 +54,10 @@ let dateConflict = (startDate, endDate, bookings) => {
 
     bookings.forEach(booking => {
         if (startDate >= booking.startDate && startDate <= booking.endDate) {
-            conflictErrors.startDate = "Start date conflicts with an existing booking";
+            conflictErrors.startDate = "Check-in conflicts with an existing booking";
         }
         if (endDate <= booking.endDate && endDate >= booking.startDate) {
-            conflictErrors.endDate = "End date conflicts with an existing booking";
+            conflictErrors.endDate = "Checkout conflicts with an existing booking";
         }
         if (startDate < booking.startDate && endDate > booking.endDate) {
             conflictErrors.overlap = "Dates overlap an existing booking";
@@ -352,7 +352,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         err.title = "Validation Error";
         err.message = "Validation Error";
         err.errors = {
-            timeTravel: "Cannot make a reservation same day or in the past"
+            timeTravel: "Reservation cannot be in the past or too close to check-in"
         };
         next(err);
     } else if (startDate >= endDate) {
@@ -361,7 +361,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         err.title = "Validation Error";
         err.message = "Validation Error";
         err.errors = {
-            endDate: "endDate cannot be on or before startDate"
+            endDate: "Checkout cannot be on or before check-in"
         };
         next(err);
     } else {

@@ -27,11 +27,6 @@ const CreateBookingCard = ({ sessionUser, currentSpot }) => {
             endDate
         }
 
-        console.log("NIGHTs: ", nights);
-        console.log("BOOKING DATES: ", inputData);
-        console.log("SPOT ID: ", currentSpot.id);
-        console.log("CURRENT USER: ", sessionUser);
-
         let createSuccess = await dispatch(TH_createBooking(currentSpot.id, inputData))
             .catch(async (res) => {
                 const data = await res.json();
