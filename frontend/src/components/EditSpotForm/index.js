@@ -47,7 +47,7 @@ const EditSpotForm = () => {
     }, [spotToEdit]);
 
     const sessionUser = useSelector((state) => state.session.user);
-    if (!sessionUser) return <Redirect to="/" />;
+    if (!sessionUser || sessionUser.id !== spotToEdit.ownerId) return <Redirect to="/" />;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
