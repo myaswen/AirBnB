@@ -1,6 +1,10 @@
 const express = require('express');
 
 const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
+
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require('sequelize');
 
@@ -264,8 +268,40 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
 });
 
+// Middleware to validate Spot request body:
+const validateSpot = [
+    check('address')
+        .isLength({ min: 2, max: 30 })
+        .withMessage('Address must be between 2 and 30 characters.'),
+    check('city')
+        .isLength({ min: 2, max: 30 })
+        .withMessage('City must be between 2 and 30 characters.'),
+    check('state')
+        .isLength({ min: 2, max: 30 })
+        .withMessage('State must be between 2 and 30 characters.'),
+    check('country')
+        .isLength({ min: 2, max: 30 })
+        .withMessage('Country must be between 2 and 30 characters.'),
+    check('lat')
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Latitude must be between -90 and 90.'),
+    check('lng')
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Longitude must be between -180 and 180.'),
+    check('name')
+        .isLength({ min: 2, max: 30 })
+        .withMessage('Name must be between 2 and 30 characters.'),
+    check('description')
+        .isLength({ min: 2, max: 2000 })
+        .withMessage('Description must be between 2 and 2000 characters.'),
+    check('price')
+        .isInt({ min: 1, max: 10000 })
+        .withMessage('Price must be between $1 and $10,000.'),
+    handleValidationErrors
+];
+
 // Create a new spot:
-router.post('/', requireAuth, async (req, res) => {
+router.post('/', requireAuth, validateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const owner = await User.findByPk(req.user.id);
 
@@ -285,8 +321,15 @@ router.post('/', requireAuth, async (req, res) => {
     res.json(spot);
 });
 
+const validateSpotImage = [
+    check('url')
+        .isLength({ min: 2, max: 254 })
+        .withMessage('URL must be between 2 and 254 characters.'),
+    handleValidationErrors
+];
+
 // Add an image to a spot by spot id:
-router.post('/:spotId/images', requireAuth, async (req, res, next) => {
+router.post('/:spotId/images', requireAuth, validateSpotImage, async (req, res, next) => {
 
     const spot = await Spot.findByPk(req.params.spotId);
 
@@ -431,7 +474,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 });
 
 // Edit a spot:
-router.put('/:spotId', requireAuth, async (req, res, next) => {
+router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
     const spot = await Spot.findByPk(req.params.spotId);
 
