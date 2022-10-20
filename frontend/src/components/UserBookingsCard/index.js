@@ -16,7 +16,7 @@ const UserBookingsCard = ({ booking }) => {
             const today = new Date();
             const startDateObject = new Date(booking.startDate);
             if (today > startDateObject) {
-                setDeleteMessage('Cannot cancel past reservations.');
+                setDeleteMessage('Cannot cancel past or active reservations.');
                 setDeleteError(true);
             } else {
                 setDeleteConfirm(true);

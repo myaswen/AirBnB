@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
 import './SignupForm.css';
 
-function SignupForm() {
+function SignupForm({ setShowSignUpModal }) {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -21,11 +21,11 @@ function SignupForm() {
         return firstLetter + otherLetters;
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
             setErrors([]);
-            return dispatch(sessionActions.signup({
+            const sessionResponse = await dispatch(sessionActions.signup({
                 firstName: formatName(firstName),
                 lastName: formatName(lastName),
                 email,
@@ -36,8 +36,10 @@ function SignupForm() {
                     const data = await res.json();
                     if (data && data.errors) setErrors(Object.values(data.errors));
                 });
+            if (sessionResponse) setShowSignUpModal(false);
+        } else {
+            setErrors(['Confirm Password field must be the same as the Password field']);
         }
-        return setErrors(['Confirm Password field must be the same as the Password field']);
     };
 
     return (
@@ -48,43 +50,49 @@ function SignupForm() {
                     {errors.map((error, idx) => <div key={idx}>{error}</div>)}
                 </div>
                 <div className='input_wrapper'>
+                    <label>First Name</label>
                     <input
-                        placeholder='First Name'
+                        // placeholder='First Name'
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
+                    <label>Last Name</label>
                     <input
-                        placeholder='Last Name'
+                        // placeholder='Last Name'
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
                     />
+                    <label>Email</label>
                     <input
-                        placeholder='Email'
+                        // placeholder='Email'
                         type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
+                    <label>Username</label>
                     <input
-                        placeholder='Username'
+                        // placeholder='Username'
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
+                    <label>Password</label>
                     <input
-                        placeholder='Password'
+                        // placeholder='Password'
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    <label>Confirm Password</label>
                     <input
-                        placeholder='Confirm Password'
+                        // placeholder='Confirm Password'
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}

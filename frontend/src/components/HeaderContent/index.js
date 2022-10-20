@@ -12,8 +12,11 @@ const HeaderContent = ({ isLoaded }) => {
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
 
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
+
     const toggleMenu = () => {
-        setShowMenu(!showMenu);
+        setShowMenu(true);
     };
 
     const logout = (e) => {
@@ -21,17 +24,17 @@ const HeaderContent = ({ isLoaded }) => {
         dispatch(sessionActions.logout());
     };
 
-    // useEffect(() => {
-    //     if (!showMenu) return;
+    useEffect(() => {
+        if (!showMenu) return;
 
-    //     const closeMenu = () => {
-    //         setShowMenu(false);
-    //     };
+        const closeMenu = () => {
+            setShowMenu(false);
+        };
 
-    //     document.addEventListener('click', closeMenu);
+        document.addEventListener('click', closeMenu);
 
-    //     return () => document.removeEventListener("click", closeMenu);
-    // }, [showMenu]);
+        return () => document.removeEventListener("click", closeMenu);
+    }, [showMenu]);
 
     let profileOptions;
     if (sessionUser) {
@@ -39,15 +42,19 @@ const HeaderContent = ({ isLoaded }) => {
             <div className="profile-dropdown">
                 <div>{sessionUser.username}</div>
                 <div>{sessionUser.email}</div>
-                <div><Link to="/reservations">Reservations</Link></div>
-                <div onClick={logout} className="logout_button">Logout</div>
+                <Link to="/reservations">
+                    <div className="in_session_dropdown_buttons">
+                        Reservations
+                    </div>
+                </Link>
+                <div onClick={logout} className="in_session_dropdown_buttons">Logout</div>
             </div>
         );
     } else {
         profileOptions = (
             <div className="profile-dropdown">
-                <div><LoginFormModal /></div>
-                <div><SignupFormModal /></div>
+                <div className='session_dropdown_buttons' onClick={() => setShowLoginModal(true)}>Log In</div>
+                <div className='session_dropdown_buttons' onClick={() => setShowSignUpModal(true)}>Sign Up</div>
             </div>
         );
     }
@@ -59,7 +66,6 @@ const HeaderContent = ({ isLoaded }) => {
                 tbdbnb
             </NavLink>
             <div className='nav_right'>
-                {/* <Link onClick={checkSession} to="/spots/create">Become a host</Link> */}
                 {sessionUser && <Link to="/spots/create">Become a host</Link>}
                 {!sessionUser && (
                     <div className='login_to_host'>Login to start hosting!</div>
@@ -68,6 +74,8 @@ const HeaderContent = ({ isLoaded }) => {
                     <i className="fa-solid fa-bars menu_icon"></i>
                     <i className="fa-solid fa-circle-user profile_icon"></i>
                 </div>
+                <LoginFormModal showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
+                <SignupFormModal showSignUpModal={showSignUpModal} setShowSignUpModal={setShowSignUpModal} />
                 {showMenu && isLoaded && profileOptions}
             </div>
         </div>

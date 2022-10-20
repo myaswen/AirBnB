@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { TH_createBooking } from "../../store/bookingReducer";
-import LoginFormModal from "../LoginFormModal";
+// import LoginFormModal from "../LoginFormModal";
 import './CreateBookingCard.css';
 
 const CreateBookingCard = ({ sessionUser, currentSpot }) => {
@@ -26,11 +26,6 @@ const CreateBookingCard = ({ sessionUser, currentSpot }) => {
             startDate,
             endDate
         }
-
-        console.log("NIGHTs: ", nights);
-        console.log("BOOKING DATES: ", inputData);
-        console.log("SPOT ID: ", currentSpot.id);
-        console.log("CURRENT USER: ", sessionUser);
 
         let createSuccess = await dispatch(TH_createBooking(currentSpot.id, inputData))
             .catch(async (res) => {
@@ -87,7 +82,7 @@ const CreateBookingCard = ({ sessionUser, currentSpot }) => {
             )}
             {!sessionUser && (
                 <div className="reserve_button_container">
-                    <div className="reserve_noSession"><LoginFormModal /></div>
+                    <div className="reserve_noSession">Log in to make a reservation</div>
                 </div>
             )}
             <div className="total_price">

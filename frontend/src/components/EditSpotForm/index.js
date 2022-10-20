@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import './EditSpotForm.css';
 import { TH_deleteSpot, TH_editSpot, TH_fetchSpot } from "../../store/spotReducer";
 
@@ -9,6 +9,11 @@ const EditSpotForm = () => {
     const { spotId } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     const spotToEdit = useSelector(state => state.spots.singleSpot);
     const spotImages = spotToEdit.SpotImages;
@@ -48,6 +53,11 @@ const EditSpotForm = () => {
 
     const sessionUser = useSelector((state) => state.session.user);
     if (!sessionUser) return <Redirect to="/" />;
+    if (sessionUser && Object.keys(spotToEdit).length > 0 && sessionUser.id !== spotToEdit.ownerId) {
+        console.log("SESSION & SPOT", sessionUser, spotToEdit);
+        return <Redirect to="/" />;
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,14 +75,17 @@ const EditSpotForm = () => {
             description
         }
 
-        let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previousPreviewImage.id, previewImage))
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) setErrors(Object.values(data.errors));
-            });
+        if (previewImage.length >= 2 && previewImage.length <= 254) {
+            let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previousPreviewImage.id, previewImage))
+                .catch(async (res) => {
+                    const data = await res.json();
+                    if (data && data.errors) setErrors(Object.values(data.errors));
+                });
 
-        if (editedSpot) history.push(`/spots/${editedSpot.id}`)
-
+            if (editedSpot) history.push(`/spots/${editedSpot.id}`)
+        } else {
+            setErrors(["Preview URL must be between 2 and 254 characters."]);
+        }
     }
 
     const handleDelete = async () => {
@@ -95,71 +108,81 @@ const EditSpotForm = () => {
                 <h2>Edit - {spotToEdit?.name}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className='input_wrapper'>
+                        <label>Address</label>
                         <input
-                            placeholder='Address'
+                            // placeholder='Address'
                             type="text"
                             required
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                         />
+                        <label>City</label>
                         <input
-                            placeholder='City'
+                            // placeholder='City'
                             type="text"
                             required
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                         />
+                        <label>State</label>
                         <input
-                            placeholder='State'
+                            // placeholder='State'
                             type="text"
                             required
                             value={state}
                             onChange={(e) => setState(e.target.value)}
                         />
+                        <label>Country</label>
                         <input
-                            placeholder='Country'
+                            // placeholder='Country'
                             type="text"
                             required
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
                         />
+                        <label>Latitude</label>
                         <input
-                            placeholder='Latitude'
+                            // placeholder='Latitude'
                             type="number"
                             required
                             value={lat}
                             onChange={(e) => setLat(e.target.value)}
                         />
+                        <label>Longitude</label>
                         <input
-                            placeholder='Longitude'
+                            // placeholder='Longitude'
                             type="number"
                             required
                             value={lng}
                             onChange={(e) => setLng(e.target.value)}
                         />
+                        <label>Give your spot a name</label>
                         <input
-                            placeholder='Give your spot a name'
+                            // placeholder='Give your spot a name'
                             type="text"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
+                        <label>Price per night</label>
                         <input
-                            placeholder='Price per night'
+                            // placeholder='Price per night'
                             type="number"
                             required
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
+                        <label>Preview image URL</label>
                         <input
-                            placeholder="Preview image URL"
+                            // placeholder="Preview image URL"
                             type="text"
                             required
                             value={previewImage}
                             onChange={(e) => setPreviewImage(e.target.value)}
                         />
+                        <label>Describe your spot</label>
                         <textarea
-                            placeholder="Enter a description"
+                            // placeholder="Enter a description"
                             rows="16"
                             required
                             value={description}

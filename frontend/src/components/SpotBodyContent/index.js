@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { TH_fetchSpot } from '../../store/spotReducer';
 import CreateBookingCard from '../CreateBookingCard';
 import './SpotBodyContent.css';
@@ -37,6 +37,11 @@ const SpotBodyContent = () => {
         )
     }
 
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
     useEffect(() => {
         dispatch(TH_fetchSpot(spotId));
     }, [dispatch]);
@@ -63,7 +68,6 @@ const SpotBodyContent = () => {
                     </div>
                 </div>
                 <div className='booking_wrapper'>
-                    {/* <div className='booking_card_STANDIN' /> */}
                     <CreateBookingCard sessionUser={sessionUser} currentSpot={spotObject}  />
                 </div>
 
