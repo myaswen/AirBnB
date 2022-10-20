@@ -25,9 +25,11 @@ export const login = (data) => async (dispatch) => {
             password,
         }),
     });
-    const user = await response.json();
-    dispatch(setUser(user));
-    return response;
+    if (response.ok) {
+        const user = await response.json();
+        dispatch(setUser(user));
+        return response;
+    }
 };
 
 export const restoreUser = () => async dispatch => {
@@ -49,9 +51,11 @@ export const signup = (user) => async (dispatch) => {
             lastName
         }),
     });
-    const data = await response.json();
-    dispatch(setUser(data));
-    return response;
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(setUser(data));
+        return response;
+    }
 };
 
 export const logout = () => async (dispatch) => {
