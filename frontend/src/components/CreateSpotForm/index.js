@@ -62,71 +62,81 @@ const CreateSpotForm = () => {
                 <h2>Create a spot</h2>
                 <form onSubmit={handleSubmit}>
                     <div className='input_wrapper'>
+                    <label>Address</label>
                         <input
-                            placeholder='Address'
+                            // placeholder='Address'
                             type="text"
                             required
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                         />
+                        <label>City</label>
                         <input
-                            placeholder='City'
+                            // placeholder='City'
                             type="text"
                             required
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                         />
+                        <label>State</label>
                         <input
-                            placeholder='State'
+                            // placeholder='State'
                             type="text"
                             required
                             value={state}
                             onChange={(e) => setState(e.target.value)}
                         />
+                        <label>Country</label>
                         <input
-                            placeholder='Country'
+                            // placeholder='Country'
                             type="text"
                             required
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
                         />
+                        <label>Latitude</label>
                         <input
-                            placeholder='Latitude'
+                            // placeholder='Latitude'
                             type="number"
                             required
                             value={lat}
                             onChange={(e) => setLat(e.target.value)}
                         />
+                        <label>Longitude</label>
                         <input
-                            placeholder='Longitude'
+                            // placeholder='Longitude'
                             type="number"
                             required
                             value={lng}
                             onChange={(e) => setLng(e.target.value)}
                         />
+                        <label>Give your spot a name</label>
                         <input
-                            placeholder='Give your spot a name'
+                            // placeholder='Give your spot a name'
                             type="text"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
+                        <label>Price per night</label>
                         <input
-                            placeholder='Price per night'
+                            // placeholder='Price per night'
                             type="number"
                             required
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
+                        <label>Preview image URL</label>
                         <input
-                            placeholder="Preview image URL"
+                            // placeholder="Preview image URL"
                             type="text"
                             required
                             value={previewImage}
                             onChange={(e) => setPreviewImage(e.target.value)}
                         />
+                        <label>Describe your spot</label>
                         <textarea
-                            placeholder="Enter a description"
+                            // placeholder="Enter a description"
                             rows="16"
                             required
                             value={description}

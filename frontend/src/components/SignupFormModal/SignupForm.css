@@ -8,3 +8,11 @@
 .signup_button:hover {
     cursor: pointer;
 }
+
+.input_wrapper label {
+    display: flex;
+    font-size: 12px;
+    color: #8d8d8d;
+    margin-left: 10px;
+    margin-top: 10px;
+}

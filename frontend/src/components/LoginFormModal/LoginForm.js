@@ -28,15 +28,17 @@ function LoginForm({ setShowLoginModal }) {
                     {errors.map((error, idx) => <div key={idx}>{error}</div>)}
                 </div>
                 <div className='input_wrapper'>
+                    <label>Username or Email</label>
                     <input
-                        placeholder='Username or Email'
+                        // placeholder='Username or Email'
                         type="text"
                         value={credential}
                         onChange={(e) => setCredential(e.target.value)}
                         required
                     />
+                    <label>Password</label>
                     <input
-                        placeholder='Password'
+                        // placeholder='Password'
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
