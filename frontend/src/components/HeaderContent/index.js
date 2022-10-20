@@ -42,15 +42,19 @@ const HeaderContent = ({ isLoaded }) => {
             <div className="profile-dropdown">
                 <div>{sessionUser.username}</div>
                 <div>{sessionUser.email}</div>
-                <div><Link to="/reservations">Reservations</Link></div>
-                <div onClick={logout} className="logout_button">Logout</div>
+                <Link to="/reservations">
+                    <div className="in_session_dropdown_buttons">
+                        Reservations
+                    </div>
+                </Link>
+                <div onClick={logout} className="in_session_dropdown_buttons">Logout</div>
             </div>
         );
     } else {
         profileOptions = (
             <div className="profile-dropdown">
-                <div onClick={() => setShowLoginModal(true)}>Log In</div>
-                <div onClick={() => setShowSignUpModal(true)}>Sign Up</div>
+                <div className='session_dropdown_buttons' onClick={() => setShowLoginModal(true)}>Log In</div>
+                <div className='session_dropdown_buttons' onClick={() => setShowSignUpModal(true)}>Sign Up</div>
             </div>
         );
     }

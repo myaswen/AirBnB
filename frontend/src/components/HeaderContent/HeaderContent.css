@@ -49,18 +49,19 @@
     color: #3d3d3d;
 }
 
-.profile-dropdown>div {
+.profile-dropdown div {
     padding-left: 32px;
     padding-bottom: 16px;
     padding-top: 16px;
 }
 
-.profile-dropdown>div>a {
+.profile-dropdown a {
     text-decoration: none;
     color: #3d3d3d;
 }
 
-.profile-dropdown>div:hover {
+.session_dropdown_buttons:hover {
+    cursor: pointer;
     background-color: #e7e7e7;
 }
 
@@ -91,6 +92,7 @@
     font-size: 14px;
 }
 
-.logout_button:hover {
+.in_session_dropdown_buttons:hover {
     cursor: pointer;
+    background-color: #e7e7e7;
 }
