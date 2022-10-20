@@ -75,14 +75,17 @@ const EditSpotForm = () => {
             description
         }
 
-        let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previousPreviewImage.id, previewImage))
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) setErrors(Object.values(data.errors));
-            });
+        if (previewImage.length >= 2 && previewImage.length <= 254) {
+            let editedSpot = await dispatch(TH_editSpot(spotId, inputData, previousPreviewImage.id, previewImage))
+                .catch(async (res) => {
+                    const data = await res.json();
+                    if (data && data.errors) setErrors(Object.values(data.errors));
+                });
 
-        if (editedSpot) history.push(`/spots/${editedSpot.id}`)
-
+            if (editedSpot) history.push(`/spots/${editedSpot.id}`)
+        } else {
+            setErrors(["Preview URL must be between 2 and 254 characters."]);
+        }
     }
 
     const handleDelete = async () => {

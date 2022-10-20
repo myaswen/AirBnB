@@ -43,14 +43,17 @@ const CreateSpotForm = () => {
             description
         }
 
-        let createdSpot = await dispatch(TH_postSpot(inputData, previewImage))
-            .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) setErrors(Object.values(data.errors));
-            });
+        if (previewImage.length >= 2 && previewImage.length <= 254) {
+            let createdSpot = await dispatch(TH_postSpot(inputData, previewImage))
+                .catch(async (res) => {
+                    const data = await res.json();
+                    if (data && data.errors) setErrors(Object.values(data.errors));
+                });
 
-        if (createdSpot) history.push(`/spots/${createdSpot.id}`)
-
+            if (createdSpot) history.push(`/spots/${createdSpot.id}`)
+        } else {
+            setErrors(["Preview URL must be between 2 and 254 characters."]);
+        }
     }
 
     return (
