@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { TH_fetchUserBookings } from "../../store/bookingReducer";
 import UserBookingsCard from "../UserBookingsCard";
 import './UserBookingsPage.css';
@@ -15,6 +15,11 @@ const UserBookingsPage = () => {
     useEffect(() => {
         dispatch(TH_fetchUserBookings());
     }, [dispatch]);
+
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     if (!sessionUser) return <Redirect to="/" />;
 

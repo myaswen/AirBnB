@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { TH_postSpot } from "../../store/spotReducer";
 import './CreateSpotForm.css';
 
@@ -18,6 +18,11 @@ const CreateSpotForm = () => {
     const [previewImage, setPreviewImage] = useState("");
     const [description, setDescription] = useState("");
     const [errors, setErrors] = useState([]);
+
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     const sessionUser = useSelector((state) => state.session.user);
     if (!sessionUser) return <Redirect to="/" />;

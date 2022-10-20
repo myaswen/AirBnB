@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import './EditSpotForm.css';
 import { TH_deleteSpot, TH_editSpot, TH_fetchSpot } from "../../store/spotReducer";
 
@@ -9,6 +9,11 @@ const EditSpotForm = () => {
     const { spotId } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     const spotToEdit = useSelector(state => state.spots.singleSpot);
     const spotImages = spotToEdit.SpotImages;
@@ -47,7 +52,12 @@ const EditSpotForm = () => {
     }, [spotToEdit]);
 
     const sessionUser = useSelector((state) => state.session.user);
-    if (!sessionUser || sessionUser.id !== spotToEdit.ownerId) return <Redirect to="/" />;
+    if (!sessionUser) return <Redirect to="/" />;
+    if (sessionUser && Object.keys(spotToEdit).length > 0 && sessionUser.id !== spotToEdit.ownerId) {
+        console.log("SESSION & SPOT", sessionUser, spotToEdit);
+        return <Redirect to="/" />;
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
