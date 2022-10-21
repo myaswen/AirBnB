@@ -36,6 +36,10 @@ const HeaderContent = ({ isLoaded }) => {
         return () => document.removeEventListener("click", closeMenu);
     }, [showMenu]);
 
+    const handleDemoLogin = async () => {
+        await dispatch(sessionActions.login({ credential: 'Demo', password: '39gh16g4abjj255' }));
+    }
+
     let profileOptions;
     if (sessionUser) {
         profileOptions = (
@@ -55,6 +59,7 @@ const HeaderContent = ({ isLoaded }) => {
             <div className="profile-dropdown">
                 <div className='session_dropdown_buttons' onClick={() => setShowLoginModal(true)}>Log In</div>
                 <div className='session_dropdown_buttons' onClick={() => setShowSignUpModal(true)}>Sign Up</div>
+                <div className='session_dropdown_buttons' onClick={handleDemoLogin}>Demo User</div>
             </div>
         );
     }
