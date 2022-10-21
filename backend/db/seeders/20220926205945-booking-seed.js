@@ -6,7 +6,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
     const userOne = await User.findOne({
-      where: { username: 'Demo' }
+      where: { username: 'BillJoe' }
     });
     const userTwo = await User.findOne({
       where: { username: 'John2000' }

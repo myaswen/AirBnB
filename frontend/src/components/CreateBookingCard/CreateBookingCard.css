@@ -14,7 +14,7 @@
 .small_reviews {
     font-size: 14px;
     color: #9e9e9e;
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 
 .dates_container {
