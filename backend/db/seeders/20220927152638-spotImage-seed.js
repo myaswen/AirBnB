@@ -123,7 +123,6 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete('SpotImages', {
-      // url: 'image url'
       spotId: { [Op.in]: [spotOne.id, spotTwo.id, spotThree.id, spotFour.id, spotFive.id, spotSix.id, spotSeven.id, spotEight.id, spotNine.id, spotTen.id] }
     }, {});
   }

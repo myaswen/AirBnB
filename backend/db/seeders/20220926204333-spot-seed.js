@@ -6,7 +6,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
     const userOne = await User.findOne({
-      where: { username: 'Demo' }
+      where: { username: 'BillJoe' }
     });
     const userTwo = await User.findOne({
       where: { username: 'John2000' }
@@ -152,7 +152,6 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete('Spots', {
-      // name: { [Op.in]: ["A Frame Retreat", "Mountain Retreat", "Cabin in the woods"] }
       ownerId: { [Op.in]: [userOne.id, userTwo.id, userThree.id] }
     }, {});
   }
