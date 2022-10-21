@@ -1,7 +1,8 @@
 # **Tbdbnb**
 
 ## **Summary**
-    Tbdbnb is a full stack, stateful clone of airbnb.com. All data displayed on the site is dynamically loaded from both database seeds and user interaction with the site. The current build of the site offers two key features of interaction. The first feature allows users to host spots (supporting create, read, update, and delete). The second feature allows users to make bookings at those spots (supporting create, read, and delete).
+
+Tbdbnb is a full stack, stateful clone of airbnb.com. All data displayed on the site is dynamically loaded from both database seeds and user interaction with the site. The current build of the site offers two key features of interaction. The first feature allows users to host spots (supporting create, read, update, and delete). The second feature allows users to make bookings at those spots (supporting create, read, and delete).
 
 ### Check out the live site [here](https://myaswen-airbnb-clone.herokuapp.com/)!
 
